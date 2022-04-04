@@ -43,10 +43,12 @@ class KV
 			return undefined;
 
 		this.last_operation.set(k, Date.now());
-		var v = this.cache[k]
-		if (typeof v == "undefined")
-			v = this.db.read("SELECT v FROM data WHERE k = ?", k)[0];	
+		var v = this.cache[k];
+		if (typeof v != "undefined")
+			return v;
 
+		v = this.db.read("SELECT v FROM data WHERE k = ?", k)[0];
+		
 		if (typeof v == "undefined")
 			return undefined;
 

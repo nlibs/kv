@@ -50,6 +50,7 @@ class KV
 		if (typeof v == "undefined")
 			return undefined;
 
+		v = v["v"];
 		if (this.is_object)
 			v = JSON.parse(v);
 

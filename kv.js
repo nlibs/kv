@@ -37,10 +37,10 @@ class KV
 		this.cache[k] = v;
 	}
 
-	get(k)
+	get(k, default_value)
 	{
 		if (this.deleted.has(k))
-			return undefined;
+			return default_value;
 
 		this.last_operation.set(k, Date.now());
 		var v = this.cache[k];
@@ -50,7 +50,7 @@ class KV
 		v = this.db.read("SELECT v FROM data WHERE k = ?", k)[0];
 		
 		if (typeof v == "undefined")
-			return undefined;
+			return default_value;
 
 		v = v["v"];
 		if (!this.is_binary)

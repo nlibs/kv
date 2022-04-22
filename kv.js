@@ -1,16 +1,16 @@
 const SQLITE = require("sqlite");
 const SCHEMA = {"data": {"columns": ["k", "v"], "index": [], "primary": "k" }}
-const FLUSH_CHECK = 60 * 1000;
+const FLUSH_CHECK = 20 * 1000;
 const MEMORY_CLEAR_FREQUENCY = 10 * 60 * 1000;
 
 class KV
 {
-	constructor(path, is_object)
+	constructor(path, is_binary)
 	{
 		var _this = this;
-		this.is_object = false;
-		if (typeof is_object == "undefined");
-			this.is_object = true;
+		this.is_binary = is_binary;
+		if (typeof this.is_binary == "undefined")
+			this.is_binary = false;
 
 		this.cache = {};
 		this.last_operation = new Map();
@@ -53,7 +53,7 @@ class KV
 			return undefined;
 
 		v = v["v"];
-		if (this.is_object)
+		if (!this.is_binary)
 			v = JSON.parse(v);
 
 		this.cache[k] = v;
@@ -79,7 +79,8 @@ class KV
 		this.dirty.forEach(function(k)
 		{
 			var params = [k];
-			if (_this.is_object)
+			
+			if (!_this.is_binary)
 				params.push(JSON.stringify(_this.cache[k]));
 			else
 				params.push(_this.cache[k]);

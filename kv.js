@@ -34,6 +34,9 @@ class KV
 
 		this.last_operation.set(k, Date.now());
 		this.dirty.add(k);
+		if(this.is_binary)
+			v = Buffer.from(v);
+
 		this.cache[k] = v;
 	}
 

@@ -43,7 +43,7 @@ class KV
 	list_keys(prefix)
 	{
 		var list = [];
-		var rows = this.db.read("SELECT k FROM data WHERE k LIKE ?%", prefix);
+		var rows = this.db.read("SELECT k FROM data WHERE k LIKE (? || '%')", prefix);
 		for(var key in this.cache)
 		{
 			if (key.startsWith(prefix))
@@ -51,7 +51,7 @@ class KV
 		}
 
 		for(var i=0;i<rows.length;i++)
-			list.push(rows[i]["k"])
+			list.push(rows[i]["k"]);
 
 		return Array.from(new Set(list));
 	}
